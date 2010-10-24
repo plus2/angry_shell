@@ -5,6 +5,7 @@
 
 require 'fcntl'
 require 'stringio'
+require 'pp'
 
 module AngryShell
   class ShellError < StandardError
@@ -88,7 +89,7 @@ module AngryShell
 
       def ensure_ok!
         unless ok?
-          raise ShellError.new("unable to run options=#{options.inspect}\noutput=#{stdout}\nerror=#{stderr}",self)
+          raise ShellError.new("unable to run command\ncommand=#{options[:cmd]}\noptions=#{options.pretty_inspect}\noutput=#{stdout}\nerror=#{stderr}",self)
         end
       end
     end

@@ -18,6 +18,9 @@ eg 'popen4 - normal, stream io' do
   Assert(out == "Hello\n")
 end
 
+
+
+
 eg 'popen4 - error' do
   begin
     AngryShell::Shell.new.popen4(:cmd => 'casplortleecho Hello') do |cid,ipc|
@@ -29,6 +32,12 @@ eg 'popen4 - error' do
 
   Assert(raised)
 end
+
+
+eg 'cmd is a proc' do
+  Assert( AngryShell::Shell.new(lambda { puts "hello world" }).to_s == "hello world" )
+end
+
 
 eg 'run' do
   AngryShell::Shell.new("echo Whats happening").run

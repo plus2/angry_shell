@@ -39,7 +39,12 @@ module AngryShell
       @block = block
       @options = if Hash === args.last then args.pop else {} end
 
-      unless args.empty?
+      case args.size
+      when 0
+        # no op
+      when 1
+        @options[:cmd] = args.first
+      else
         @options[:cmd] = args
       end
 
@@ -320,13 +325,19 @@ module AngryShell
 
       begin
         cmd = args[:cmd]
-        if cmd.kind_of?(Array)
+
+        case cmd
+        when Proc
+          exit cmd.call.to_i
+        when Array
           exec(*cmd)
         else
           exec(cmd)
         end
 
         raise 'forty-two' 
+      rescue SystemExit
+        exit $!.status
       rescue Object => e
         Marshal.dump(e, ipc.exception)
         ipc.exception.flush
